@@ -1,19 +1,29 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+ip1, ip2, ip3 = "192.168.60.21", "192.168.60.22", "192.168.60.23"
+host1,host2,host3 = "elk1", "elk2", "elk3"
+
 $script_all = <<SCRIPT
+echo "#{ip1} #{host1}" >> /etc/hosts
+echo "#{ip2} #{host2}" >> /etc/hosts
+echo "#{ip3} #{host3}" >> /etc/hosts
 yum -y install vim tree
 ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
 source ~/.bashrc
 cat /dev/null > ~/.bash_history
-bash /root/hname.sh
 SCRIPT
 
 $script1 = <<SCRIPT
 yum -y install epel-release
 yum -y install ansible
+ssh-keyscan -f ~/.ssh/id_rsa.pub #{ip1} >> ~/.ssh/known_hosts
+ssh-keyscan -f ~/.ssh/id_rsa.pub #{ip2} >> ~/.ssh/known_hosts
+ssh-keyscan -f ~/.ssh/id_rsa.pub #{ip3} >> ~/.ssh/known_hosts
+sshpass -p "vagrant" ssh-copy-id root@#{ip1}
+sshpass -p "vagrant" ssh-copy-id root@#{ip2}
+sshpass -p "vagrant" ssh-copy-id root@#{ip3}
 cat /dev/null > ~/.bash_history
-bash /root/sshid.sh
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -23,36 +33,32 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-      vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
+      vb.customize ["modifyvm", :id, "--memory", "4048", "--cpus", "2"]
     end
 
-    config.vm.define "elk2" do |app|
+    config.vm.define "#{host2}" do |app|
       app.vm.box = "centos_tmp"
-      app.vm.hostname = "elk2"
+      app.vm.hostname = "#{host2}"
       app.vm.provision "file", source: ".bashrc",destination: "/root/"
-      app.vm.provision "file", source: "hname.sh",destination: "/root/"
       app.vm.provision "shell", inline: $script_all
-      app.vm.network :private_network, ip: "192.168.60.102"
+      app.vm.network :private_network, ip: "#{ip2}"
     end
 
-    config.vm.define "elk3" do |app|
+    config.vm.define "#{host3}" do |app|
       app.vm.box = "centos_tmp"
-      app.vm.hostname = "elk3"
+      app.vm.hostname = "#{host3}"
       app.vm.provision "file", source: ".bashrc",destination: "/root/"
-      app.vm.provision "file", source: "hname.sh",destination: "/root/"
       app.vm.provision "shell", inline: $script_all
-      app.vm.network :private_network, ip: "192.168.60.103"
+      app.vm.network :private_network, ip: "#{ip3}"
     end
 
-    config.vm.define "elk1" do |app|
+    config.vm.define "#{host1}" do |app|
       app.vm.box = "centos_tmp"
-      app.vm.hostname = "elk1"
+      app.vm.hostname = "#{host1}"
       app.vm.provision "file", source: "hosts",destination: "/etc/ansible/hosts"
       app.vm.provision "file", source: ".bashrc",destination: "/root/"
-      app.vm.provision "file", source: "hname.sh",destination: "/root/"
-      app.vm.provision "file", source: "sshid.sh",destination: "/root/"
       app.vm.provision "shell", inline: $script_all
       app.vm.provision "shell", inline: $script1
-      app.vm.network :private_network, ip: "192.168.60.101"
+      app.vm.network :private_network, ip: "#{ip1}"
     end
 end

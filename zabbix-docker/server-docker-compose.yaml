@@ -1,0 +1,61 @@
+version: '3.5'
+services:
+ zabbix-server:
+  image: zabbix/zabbix-server-mysql:alpine-4.4-latest
+  container_name: server-zabbix
+  # environment:
+  #   - COMPOSE_PROJECT_NAME=zabbix
+  ports:
+   - "10051:10051"
+  restart: always
+  volumes:
+   - /etc/localtime:/etc/localtime:ro
+   - /etc/timezone:/etc/timezone:ro
+   - ./zbx_env/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts:ro
+   - ./zbx_env/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts:ro
+   - ./zbx_env/var/lib/zabbix/export:/var/lib/zabbix/export:rw
+   - ./zbx_env/var/lib/zabbix/modules:/var/lib/zabbix/modules:ro
+   - ./zbx_env/var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
+   - ./zbx_env/var/lib/zabbix/ssh_keys:/var/lib/zabbix/ssh_keys:ro
+   - ./zbx_env/var/lib/zabbix/mibs:/var/lib/zabbix/mibs:ro
+   - ./zbx_env/var/lib/zabbix/snmptraps:/var/lib/zabbix/snmptraps:ro
+  ulimits:
+   nproc: 65535
+   nofile:
+    soft: 20000
+    hard: 40000
+  # deploy:
+  #  resources:
+  #   limits:
+  #     cpus: '0.70'
+  #     memory: 1G
+  #   reservations:
+  #     cpus: '0.5'
+  #     memory: 512M
+  env_file:
+   - .env/.env_db_mysql
+   - .env/.env_srv
+  secrets:
+   - MYSQL_USER
+   - MYSQL_PASSWORD
+   - MYSQL_ROOT_PASSWORD
+  user: root
+  stop_grace_period: 30s
+  sysctls:
+   - net.ipv4.ip_local_port_range=1024 65000
+   - net.ipv4.conf.all.accept_redirects=0
+   - net.ipv4.conf.all.secure_redirects=0
+   - net.ipv4.conf.all.send_redirects=0
+  labels:
+   com.zabbix.description: "Zabbix server with MySQL database support"
+   com.zabbix.company: "Zabbix LLC"
+   com.zabbix.component: "zabbix-server"
+   com.zabbix.dbtype: "mysql"
+   com.zabbix.os: "alpine"
+secrets:
+  MYSQL_USER:
+    file: .mysql/.MYSQL_USER
+  MYSQL_PASSWORD:
+    file: .mysql/.MYSQL_PASSWORD
+  MYSQL_ROOT_PASSWORD:
+    file: .mysql/.MYSQL_ROOT_PASSWORD

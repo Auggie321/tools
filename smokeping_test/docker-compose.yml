@@ -1,0 +1,20 @@
+---
+version: "2"
+services:
+  smokeping:
+    image: linuxserver/smokeping
+    container_name: smokeping
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - TZ=Asia/Hong_Kong
+    volumes:
+      - ./smokeping/config:/config
+      - ./smokeping/data:/data
+      - ./smokeping/etc/config:/etc/smokeping/config
+      - ./smokeping/etc/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+      # - ./smokeping/htpasswd:/var/www/localhost/htdocs/htpasswd ##htpasswd -c htpasswd admin
+    ports:
+      - 8099:80
+    mem_limit: 4096m
+    restart: unless-stopped

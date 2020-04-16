@@ -6,6 +6,11 @@ alias mv='mv -i'
 alias ana='ansible all -m ping'
 alias ans='ansible all -m shell -a'
 # Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# Git branch color definitions
 parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }

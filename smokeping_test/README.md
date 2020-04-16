@@ -1,4 +1,10 @@
-### forked from sparanoid/docker-compose-smokeping
+### forked from linuxserver/docker-smokeping
+```
+git clone https://github.com/linuxserver/docker-smokeping.git
+cd docker-smokeping
+docker build --no-cache --pull -t linuxserver/smokeping:latest .
+```
+```
 添加并修改了如下的东西：  
 1.加入了web页面访问,需要输入登录账号admin/admin的功能（默认设置为无账号即可访问）  
 如需设置账号登录，可取消docker-compose内htpasswd的一行注释，同时需要把smokeping.conf内不用的配置注释即可；  
@@ -6,7 +12,7 @@
 3.注释了Targets内部没用的节点，并添加了一些自己的数据  
 4.修改了Database内部icmp的触发频率  
 5.注释了etc/config下的Private文件，暂时无需加密部分配置  
-
+```
 ### Built-in Providers
 - Google Compute Engine (GCE)
 - Amazon Elastic Compute Cloud (EC2)

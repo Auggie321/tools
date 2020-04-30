@@ -1,8 +1,10 @@
 ## Deploy elastic cluster(three es without crenditial), kibana, cerebro, logstash, filebeat in single vm node.
 ## Demo test: filebeats collect syslog and host:/var/lib/container's log to logstash.
 ## Reference follow as below:
-## 1:
-## 2:
+## 1: https://github.com/shazChaudhry/docker-elastic
+## 2: https://github.com/xeraa/java-logging
+## 3: https://github.com/maxyermayank
+## 4: https://github.com/geektime-geekbang/geektime-ELK
 
 version: '3.3'
 services:
@@ -17,7 +19,6 @@ services:
       - -Dhosts.0.host=http://elasticsearch:9200
     networks:
       - hwc_es7net
-
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.2.1
@@ -63,7 +64,6 @@ services:
       - 9200:9200
     networks:
       - hwc_es7net
-
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.1
     container_name: es7_warm

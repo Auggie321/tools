@@ -1,0 +1,162 @@
+## Deploy elastic cluster(three es without crenditial), kibana, cerebro, logstash, filebeat in single vm node.
+## Demo test: filebeats collect syslog and host:/var/lib/container's log to logstash.
+## Reference follow as below:
+## 1:
+## 2:
+
+version: '3.3'
+services:
+
+  cerebro:
+    image: lmenezes/cerebro:0.8.3
+    container_name: hwc_cerebro
+    restart: always
+    ports:
+      - "9000:9000"
+    command:
+      - -Dhosts.0.host=http://elasticsearch:9200
+    networks:
+      - hwc_es7net
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.1
+    container_name: hwc_kibana7
+    restart: always
+    environment:
+      #- I18N_LOCALE=zh-CN
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+      - XPACK_MONITORING_COLLECTION_ENABLED="true"
+    ports:
+      - "5601:5601"
+    networks:
+      - hwc_es7net
+    volumes:
+      - hwc_kibana_data:/usr/share/kibana/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.1
+    container_name: es7_hot
+    restart: always
+    environment:
+      - cluster.name=geektime-hwc
+      - node.name=es7_hot
+      - node.attr.box_type=hot
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es7_hot,es7_warm,es7_cold
+      - cluster.initial_master_nodes=es7_hot,es7_warm,es7_cold
+    healthcheck:
+      ## Non set credentials with es-cluster
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?pretty"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - hwc_es7data_hot:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - hwc_es7net
+
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.1
+    container_name: es7_warm
+    restart: always
+    environment:
+      - cluster.name=geektime-hwc
+      - node.name=es7_warm
+      - node.attr.box_type=warm
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es7_hot,es7_warm,es7_cold
+      - cluster.initial_master_nodes=es7_hot,es7_warm,es7_cold
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - hwc_es7data_warm:/usr/share/elasticsearch/data
+    networks:
+      - hwc_es7net
+  elasticsearch3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.1
+    container_name: es7_cold
+    restart: always
+    environment:
+      - cluster.name=geektime-hwc
+      - node.name=es7_cold
+      - node.attr.box_type=cold
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es7_hot,es7_warm,es7_cold
+      - cluster.initial_master_nodes=es7_hot,es7_warm,es7_cold
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - hwc_es7data_cold:/usr/share/elasticsearch/data
+    networks:
+      - hwc_es7net
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.2.1
+    hostname: logstash
+    container_name: logstash
+    restart: always
+    environment:
+      - "xpack.monitoring.enabled=true"
+    ports:
+      - "4560:4560"
+      - "5044:5044"
+    volumes:
+      # Provide a pipeline configuration for Logstash with a bind-mounted file
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    networks:
+      - hwc_es7net
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.2.1
+    hostname: filebeat
+    container_name: filebeat
+    restart: always
+    # Need to override user so we can access the log files, and docker.sock
+    user: root
+    networks:
+      - hwc_es7net
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - hwc_filebeat_data:/usr/share/filebeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      # This is needed for filebeat to load container log path as specified in filebeat.yml
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+      # This is needed for filebeat to load logs for system and auth modules
+      - /var/log/:/var/log/:ro
+      # This is needed for filebeat to load logs for auditd module
+      # - "/var/log/audit/:/var/log/audit/:ro"
+    # disable strict permission checks
+    command: ["--strict.perms=false"]
+
+volumes:
+  hwc_es7data_hot:
+    driver: local
+  hwc_es7data_warm:
+    driver: local
+  hwc_es7data_cold:
+    driver: local
+  hwc_filebeat_data:
+    driver: local
+  hwc_kibana_data:
+    driver: local
+
+networks:
+  hwc_es7net:
+    driver: bridge

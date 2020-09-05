@@ -1,0 +1,1 @@
+##nginx_staticweb自用nginx静态web负责转输文件

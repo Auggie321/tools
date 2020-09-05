@@ -1,0 +1,15 @@
+version: '3'
+services:
+    nginx:
+        container_name: nginx_web
+        image: nginx:latest
+        restart: always
+        volumes:
+            - ./conf.d:/etc/nginx/conf.d
+            - ./share:/share
+           # - ./etc/nginx/ssl:/etc/nginx/ssl
+        ports:
+            - 888:80
+            #- 888:443
+        environment:
+            - TZ=Asia/Shanghai

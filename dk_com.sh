@@ -66,9 +66,14 @@ EOF
 ##After pip, install docker-compose
 DkCom() {
     pip install --upgrade pip
-    pip install 'more-itertools<=5.0.0'
-    pip install 'six>=1.11.0'
-    pip install docker-compose
+    #python issue,nouseful
+    #pip install 'more-itertools<=5.0.0'
+    #pip install 'six>=1.11.0'
+    #pip install docker-compose
+    wget --no-check-certificate https://tool.auggieme.top/share/docker-compose
+    chmod +x docker-compose
+    mv docker-compose /usr/bin/docker-compose
+    
 }
 
 ##Install pip and add speed configuration

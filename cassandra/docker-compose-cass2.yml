@@ -1,0 +1,26 @@
+version: '2'
+services:
+  cassandra2:
+    image: docker.io/bitnami/cassandra:3-debian-10
+    ports:
+      - 7000:7000
+      - 9042:9042
+    volumes:
+      - cassandra2_data:/bitnami
+    environment:
+      - CASSANDRA_SEEDS=cassandra,cassandra2
+      - CASSANDRA_CLUSTER_NAME=cassandra-cluster
+      - CASSANDRA_PASSWORD=cassandra
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra2
+      - BITNAMI_DEBUG=true
+      # By default, Cassandra autodetects the available host memory and takes as much as it can.
+      # Therefore, memory options are mandatory if multiple Cassandras are launched in the same node.
+      - MAX_HEAP_SIZE=2G
+      - HEAP_NEWSIZE=200M
+    restart: always
+    extra_hosts:
+      - "cassandra:192.168.60.101"
+      - "cassandra2:192.168.60.102"
+volumes:
+  cassandra2_data:
+    driver: local

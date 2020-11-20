@@ -1,0 +1,30 @@
+version: '2'
+services:
+  kafka:
+    image: wurstmeister/kafka
+    restart: always
+    ports:
+    - 9092:9092
+    container_name: kafka
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: 172.16.46.1:2181,172.16.46.2:2181,172.16.46.3:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.16.46.1:9092
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      # heap size not more than the half of physical mem
+      KAFKA_HEAP_OPTS: "-Xmx8G -Xms8G"
+      # threads should not big than $(nproc)
+      KAFKA_NUM_NETWORK_THREADS: 6
+      # 67108864/1024/1024=64M
+      KAFKA_BUFFER_MEMORY: 67108864
+      KAFKA_BATCH_SISE: 16384
+      KAFKA_LINGER_MS: 1
+      KAFKA_MAX_POLL_RECORDS: 8192
+      KAFKA_MAX_PARTITION_FETCH_BYTES: 16777216
+      KAFKA_FETCH_MAX_BYTES: 134217728
+      KAFKA_RETRIES: 1
+      KAFKA_TOPIC_METADATA_REFRESH_INTERVAL_MS: "60000"
+      TZ: "Asia/Shanghai"
+    volumes:
+    - ./kafka-data:/kafka

@@ -1,0 +1,44 @@
+version: '3.5'
+services:
+ zabbix-proxy:
+  image: zabbix/zabbix-proxy-mysql:alpine-4.4-latest
+  container_name: proxy
+  # environment:
+  #   - COMPOSE_PROJECT_NAME=zabbix
+  ports:
+   - "10071:10051"
+  restart: always
+  volumes:
+   - /etc/localtime:/etc/localtime:ro
+   - /etc/timezone:/etc/timezone:ro
+   - ./zbx_env/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts:ro
+   - ./zbx_env/var/lib/zabbix/modules:/var/lib/zabbix/modules:ro
+   - ./zbx_env/var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
+   - ./zbx_env/var/lib/zabbix/ssh_keys:/var/lib/zabbix/ssh_keys:ro
+   - ./zbx_env/var/lib/zabbix/mibs:/var/lib/zabbix/mibs:ro
+   - ./zbx_env/var/lib/zabbix/snmptraps:/var/lib/zabbix/snmptraps:ro
+  ulimits:
+   nproc: 65535
+   nofile:
+    soft: 20000
+    hard: 40000
+  # deploy:
+  #  resources:
+  #   limits:
+  #     cpus: '0.70'
+  #     memory: 512M
+  #   reservations:
+  #     cpus: '0.3'
+  #     memory: 256M
+  env_file:
+   - .env/.env_db_mysql_proxy
+   - .env/.env_prx
+   - .env/.env_prx_mysql
+  user: root
+  stop_grace_period: 30s
+  labels:
+   com.zabbix.description: "Zabbix proxy with MySQL database support"
+   com.zabbix.company: "Zabbix LLC"
+   com.zabbix.component: "zabbix-proxy"
+   com.zabbix.dbtype: "mysql"
+   com.zabbix.os: "alpine"

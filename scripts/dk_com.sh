@@ -1,6 +1,7 @@
 #!/bin/bash
 #Function: prepare some server's basic enviroment,it consist of docker, pip, docker-compose, chronyd, selinux, ansible;
 #Supported system versions: Centos7.x
+#LastUpdate: 2020.11.20
 #Author: Auggie
 
 ##Install aliyun docker-ce
@@ -20,7 +21,7 @@ DkIns() {
         docker-engine-selinux \
         docker-engine >& /dev/null
         yum list docker-ce --showduplicates|grep "^dock"|sort -r
-        yum -y install docker-ce gcc gcc-c++ vim
+        yum -y install docker-ce gcc gcc-c++ vim wget tree net-tools 
         systemctl enable docker && systemctl start docker && systemctl status docker
     elif [ $b == 0 ]; then
         echo "Docker Already Exist, `docker --version`"
@@ -31,7 +32,11 @@ DkIns() {
 DkSpRepo() {
     tee /etc/docker/daemon.json<<EOF
 {
-    "registry-mirrors":["https://q1s6p6vq.mirror.aliyuncs.com"]
+    "registry-mirrors":["https://q1s6p6vq.mirror.aliyuncs.com"],
+    "log-driver": "json-file",
+    "log-opts": {
+    	"max-size": "100m"
+  }
 }
 EOF
 systemctl daemon-reload && systemctl restart docker
@@ -65,14 +70,16 @@ EOF
 
 ##After pip, install docker-compose
 DkCom() {
-    pip install --upgrade pip
-    #python issue,nouseful
+    ## python issue,nouseful
+    #pip install --upgrade pip
     #pip install 'more-itertools<=5.0.0'
     #pip install 'six>=1.11.0'
     #pip install docker-compose
+
+    ##curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
     wget --no-check-certificate https://tool.auggieme.top/share/docker-compose
-    chmod +x docker-compose
     mv docker-compose /usr/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
     
 }
 
@@ -125,7 +132,6 @@ VpsPip() {
 # AnsibleSet() {
 #     ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 # }
-
 
 
 ## Demostic Server Use: Default

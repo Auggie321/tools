@@ -1,0 +1,11 @@
+## Base Centos in /etc/default/minio, link for /usr/lib/systemd/system/minio.service
+
+MINIO_ACCESS_KEY="ucchip"
+MINIO_SECRET_KEY="ucchip2020"
+MINIO_PROMETHEUS_AUTH_TYPE="public"
+MINIO_VOLUMES="http://192.168.60.101/data1 http://192.168.60.101/data2 http://192.168.60.102/data1 http://192.168.60.102/data2 http://192.168.60.103/data1 http://192.168.60.103/data2 http://192.168.60.104/data1 http://192.168.60.104/data2"
+
+# Use if you want to run Minio on a custom port.
+# #MINIO_OPTS="--address :9199"
+
+

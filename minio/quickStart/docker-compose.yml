@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  minio1:
+    image: minio/minio:RELEASE.2020-11-19T23-48-16Z
+    container_name: minio
+    restart: always
+    volumes:
+      - ./data1:/data1
+      - ./data2:/data2
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+      TZ: "Asia/Shanghai"
+    command: server http://minio{1...4}/data{1...2}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    extra_hosts:
+      - "minio1:192.168.60.101"
+      - "minio2:192.168.60.102"
+      - "minio3:192.168.60.103"
+      - "minio4:192.168.60.104"

@@ -1,0 +1,11 @@
+demo1 ansible_host=192.168.60.101  ansible_user=root ansible_ssh_port=22 ansible_ssh_pass=vagrant
+demo2 ansible_host=192.168.60.102  ansible_user=root ansible_ssh_port=22 ansible_ssh_pass=vagrant
+demo3 ansible_host=192.168.60.103  ansible_user=root ansible_ssh_port=22 ansible_ssh_pass=vagrant
+demo4 ansible_host=192.168.60.104  ansible_user=root ansible_ssh_port=22 ansible_ssh_pass=vagrant
+
+
+[all]
+demo1
+demo2
+demo3
+demo4

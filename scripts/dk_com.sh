@@ -5,6 +5,12 @@
 #Author: Auggie
 
 ##Install aliyun docker-ce
+####################Installing a specific version######################################
+# Centos
+# root@demo3 ~ $ yum list docker-ce --showduplicates|grep "^dock"|sort -r
+# docker-ce.x86_64            3:19.03.8-3.el7                     docker-ce-stable
+# root@demo3 ~ $  yum -y install docker-ce-19.03.8-3.el7 
+#######################################################################################
 DkIns() {
     a=`docker --version >/dev/null 2>&1`
     b=$?
@@ -21,7 +27,7 @@ DkIns() {
         docker-engine-selinux \
         docker-engine >& /dev/null
         yum list docker-ce --showduplicates|grep "^dock"|sort -r
-        yum -y install docker-ce.3:19.03.8-3.el7  docker-ce-cli.3:19.03.8-3.el7
+        yum -y install docker-ce-19.03.8-3.el7 
         yum -y install gcc gcc-c++ vim wget tree net-tools 
         systemctl enable docker && systemctl start docker && systemctl status docker
     elif [ $b == 0 ]; then

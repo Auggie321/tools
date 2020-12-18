@@ -21,7 +21,8 @@ DkIns() {
         docker-engine-selinux \
         docker-engine >& /dev/null
         yum list docker-ce --showduplicates|grep "^dock"|sort -r
-        yum -y install docker-ce gcc gcc-c++ vim wget tree net-tools 
+        yum -y install docker-ce.3:19.03.8-3.el7  docker-ce-cli.3:19.03.8-3.el7
+        yum -y install gcc gcc-c++ vim wget tree net-tools 
         systemctl enable docker && systemctl start docker && systemctl status docker
     elif [ $b == 0 ]; then
         echo "Docker Already Exist, `docker --version`"
@@ -35,7 +36,8 @@ DkSpRepo() {
     "registry-mirrors":["https://q1s6p6vq.mirror.aliyuncs.com"],
     "log-driver": "json-file",
     "log-opts": {
-    	"max-size": "100m"
+    	"max-size": "50m",
+        "max-file": "3"
   }
 }
 EOF
@@ -77,7 +79,7 @@ DkCom() {
     #pip install docker-compose
 
     ##curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
-    wget --no-check-certificate https://tool.auggieme.top/share/docker-compose
+    wget --no-check-certificate http://tool.auggieme.top/share/package/docker-compose
     mv docker-compose /usr/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
     

@@ -10,7 +10,5 @@ services:
       - 3888:3888
     environment:
       ZOO_MY_ID: 1
-      #ZOOKEEPER_CLIENT_PORT: 2181
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=172.16.46.2:2888:3888;2181 server.3=172.16.46.3:2888:3888;2181
-      #ZOO_STANDALONE_ENABLED: "false"
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=${ZK2}:2888:3888;2181 server.3=${ZK3}:2888:3888;2181
       TZ: "Asia/Shanghai"

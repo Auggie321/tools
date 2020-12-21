@@ -27,7 +27,7 @@ DkIns() {
         docker-engine-selinux \
         docker-engine >& /dev/null
         yum list docker-ce --showduplicates|grep "^dock"|sort -r
-        yum -y install docker-ce-19.03.8-3.el7 
+        yum -y install docker-ce-19.03.8-3.el7 docker-ce-cli-19.03.8-3.el7
         yum -y install gcc gcc-c++ vim wget tree net-tools 
         systemctl enable docker && systemctl start docker && systemctl status docker
     elif [ $b == 0 ]; then
@@ -86,8 +86,8 @@ DkCom() {
 
     ##curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
     wget --no-check-certificate http://tool.auggieme.top/share/package/docker-compose
+    chmod +x docker-compose
     mv docker-compose /usr/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
     
 }
 

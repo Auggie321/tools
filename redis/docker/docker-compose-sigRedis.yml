@@ -1,0 +1,15 @@
+version: '3'
+services:
+  redis:
+    container_name: redis
+    image: "redis"
+    restart: "always"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    environment:
+      TZ: "Asia/Shanghai"
+    ports:
+      - "6379:6379"

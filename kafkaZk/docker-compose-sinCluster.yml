@@ -1,19 +1,32 @@
-version: '2'
+version: '3.1'
 services:
+  zk:
+    image: zookeeper:3.6.2
+    restart: always
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181
+      TZ: "Asia/Shanghai"
+  
   kafka:
     image: wurstmeister/kafka
     restart: always
     ports:
-    - 9092:9092
+      - 9092:9092
     container_name: kafka
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: ${ZK1}:2181,${ZK2}:2181,${ZK3}:2181
+      KAFKA_ZOOKEEPER_CONNECT: zk:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://{KF1}:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KF1}:9092
       KAFKA_LISTENERS: PLAINTEXT://:9092
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       # heap size not more than the half of physical mem
-      KAFKA_HEAP_OPTS: "-Xmx8G -Xms8G"
+      KAFKA_HEAP_OPTS: "-Xmx4G -Xms4G"
       # threads should not big than $(nproc)
       KAFKA_NUM_NETWORK_THREADS: 6
       # 67108864/1024/1024=64M
@@ -27,6 +40,6 @@ services:
       KAFKA_TOPIC_METADATA_REFRESH_INTERVAL_MS: "60000"
       TZ: "Asia/Shanghai"
     env_file:
-      - ./.zkenv
+      - ./.env
     volumes:
       - ./kafka-data:/kafka

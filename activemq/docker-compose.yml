@@ -1,0 +1,29 @@
+version: '3'
+services:
+  activemq:
+    container_name: activemq
+    image: webcenter/activemq:5.14.3
+    restart: always
+    environment:
+      ACTIVEMQ_NAME: amqp-srv1
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+      ACTIVEMQ_USER_LOGIN: user
+      ACTIVEMQ_USER_PASSWORD: user
+      ACTIVEMQ_JMX_LOGIN: iot
+      ACTIVEMQ_JMX_PASSWORD: iot
+      ACTIVEMQ_MIN_MEMORY: 1024
+      ACTIVEMQ_MAX_MEMORY: 2048
+      ACTIVEMQ_ENABLED_SCHEDULER: "true"
+      ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: "true"
+      TZ: "Asia/Shanghai"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+    volumes:
+      - ./activemq:/data/activemq

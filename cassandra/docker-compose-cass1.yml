@@ -25,6 +25,6 @@ services:
     extra_hosts:
       - "cassandra:192.168.60.101"
       - "cassandra2:192.168.60.102"
-volumes:
-  cassandra_data:
-    driver: local
+# volumes:
+#   cassandra_data:
+#     driver: local

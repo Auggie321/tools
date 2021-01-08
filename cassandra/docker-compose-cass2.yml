@@ -1,6 +1,6 @@
 version: '2'
 services:
-  cassandra2:
+  cass2:
     image: docker.io/bitnami/cassandra:3-debian-10
     container_name: cassandra
     ports:

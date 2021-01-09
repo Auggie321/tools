@@ -7,14 +7,14 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus_data:/prometheus   #prometheus数据目录
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml   #prometheus配置文件
-      - ./rules.yml:/etc/prometheus/rules.yml   #报警配置文件
+      - ./promeData:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules.yml
     #设置启动选项，指定配置文件位置，指定存储路径，指定数据保留天数（默认15天），指定最大数据量（默认不限制）,指定热更新
     command: 
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=3d'
+      - '--storage.tsdb.retention.time=7d'
       - '--storage.tsdb.retention.size=50GB'
       - '--web.enable-lifecycle'
     environment:
@@ -25,7 +25,7 @@ services:
     container_name: alertmanager
     restart: always
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - './config.yml:/etc/alertmanager/config.yml'
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -40,10 +40,10 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./grafana_data:/var/lib/grafana
-      - ./grafana_conf/provisioning/:/etc/grafana/provisioning/
+      - ./gfdata:/var/lib/grafana
+      - ./gfpro:/etc/grafana/provisioning/
     env_file:
-      - ./grafana_conf/config.monitoring
+      - ./config.monitoring
     restart: always
     environment:
       TZ: "Asia/Shanghai"

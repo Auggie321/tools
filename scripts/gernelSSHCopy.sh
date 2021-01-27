@@ -5,7 +5,6 @@
 # LastUpdate: 2021.1.27
 # Author: Auggie
 
-
 check_ssh() {
     if [ -f "$HOME/.ssh/id_rsa.pub" ]; then
     echo "家目录$HOME已存在id_rsa.pub已存在"

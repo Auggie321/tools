@@ -1,8 +1,8 @@
 version: '2.0'
 services:
-  node-exporter:
+  node_exporter:
     image: prom/node-exporter:latest
-    container_name: node-exporter
+    container_name: node_exporter
     restart: always
     ports:
       - "9100:9100"

@@ -1,9 +1,9 @@
 version: '2.0'
-
 services:
   kafka_exporter:
     image: danielqsj/kafka-exporter
     container_name: kafka_exporter
+    restart: always
     command: --kafka.server=172.16.46.1:9092
     ports: 
       - "9308:9308" 

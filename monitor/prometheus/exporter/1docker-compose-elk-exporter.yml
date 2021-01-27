@@ -1,10 +1,12 @@
-elasticsearch_exporter2:
+version: '2.0'
+services:
+  elk_exporter:
     image: justwatch/elasticsearch_exporter:1.1.0
     container_name: elk-exporter
+    restart: always
     command:
         - '--es.uri=http://172.16.46.5:9200'
     environment:
       TZ: "Asia/Shanghai"
-    restart: always
     ports:
         - "9114:9114"

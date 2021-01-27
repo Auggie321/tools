@@ -1,9 +1,11 @@
-node-exporter:
+version: '2.0'
+services:
+  node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
+    restart: always
     ports:
       - "9100:9100"
-    restart: always
     labels:
       org.label-schema.group: "node-exporter"
     environment:

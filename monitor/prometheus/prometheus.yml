@@ -4,7 +4,7 @@ global:
   scrape_timeout: 10s
   evaluation_interval: 1m
   external_labels:
-    monitor: codelab-monitor
+    monitor: codelab-monitor   ##prometheus头标
 rule_files:
   - "rules.yml"
 scrape_configs:

@@ -46,5 +46,5 @@ ssh_copy_id_to_all(){
 }
 
 check_ssh
-# check_package
+check_package
 ssh_copy_id_to_all

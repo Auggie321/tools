@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  nexus:
+    container_name: nexus
+    restart: always
+    image: sonatype/nexus3:3.17.0
+    privileged: true
+    user: root
+    volumes:
+      - /opt/docker/nexus/nexus-data:/nexus-data:Z
+    ports:
+      - "8081:8081"
+    environment:
+      TZ: "Asia/Shanghai"
+
+#     volumes:
+#       - nexus-data:/nexus-data:Z
+
+# volumes:
+#   nexus-data:

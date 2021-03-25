@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  cerebro:
+    image: lmenezes/cerebro:0.8.3
+    container_name: cerebro
+    restart: always
+    ports:
+      - "9000:9000"
+    command:
+      - -Dhosts.0.host=http://elasticsearch:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.3
+    container_name: kibana
+    restart: always
+    #environment:
+      #- I18N_LOCALE=zh-CN
+      #- XPACK_GRAPH_ENABLED=true
+      #- TIMELION_ENABLED=true
+      #- XPACK_MONITORING_COLLECTION_ENABLED="true"
+    ports:
+      - "5601:5601"
+    volumes:
+      #- ./kibana_data:/usr/share/kibana/data
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: elk
+    restart: always
+    privileged: true
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+      ES_CONNECT_RETRY: 300
+      ELASTIC_PASSWORD: "abcd12121"
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200
+      - 9300:9300

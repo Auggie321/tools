@@ -1,0 +1,35 @@
+version: '2.2'
+services:
+
+  yapi-mongo:
+    image: mongo:latest
+    container_name: yapi-mongo
+    restart: unless-stopped
+    volumes:
+      - ./mongod.conf:/etc/mongod.conf
+      - ./initdb.d/:/docker-entrypoint-initdb.d/
+      - ./data/db/:/data/db/
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      TZ: "Asia/Shanghai"
+    ports:
+        - "27017:27017"
+    command: ["-f", "/etc/mongod.conf"]
+
+  yapi-web:
+    image: jayfong/yapi:1.9.2
+    container_name: yapi-web
+    ports:
+      - 3001:3000
+    volumes:
+      - ./config.json:/yapi/config.json
+    depends_on:
+      - yapi-mongo
+    links:
+      - yapi-mongo
+      # - openldap
+    restart: unless-stopped

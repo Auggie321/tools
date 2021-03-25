@@ -1,0 +1,37 @@
+{
+    "port": "3000",
+    "adminAccount": "admin@abc.com",
+    "adminPassword":"abc20@!",
+    "closeRegister":false,
+    "timeout":120000,
+    "db": {
+      "servername": "yapi-mongo",
+      "DATABASE": "yapi",
+      "port": 27017,
+      "user": "root",
+      "pass": "abc20@!",
+      "authSource": ""
+    },
+    "mail": {
+      "enable": false,
+      "host": "smtp.163.com",
+      "port": 465,
+      "from": "***@163.com",
+      "auth": {
+        "user": "***@163.com",
+        "pass": "*****"
+      }
+    },
+    "ldapLogin": {
+        "enable": false,
+        "server": "ldap://openldap",
+        "baseDn": "CN=admin,DC=abc,DC=com",
+        "bindPassword": "admin",
+        "searchDn": "OU=people,DC=abc,DC=com",
+        "searchStandard": "mail",
+        "emailPostfix": "@abc.com",
+        "emailKey": "mail",
+        "usernameKey": "name"
+     },
+    "plugins": []
+}

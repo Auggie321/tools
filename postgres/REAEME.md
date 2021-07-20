@@ -14,14 +14,14 @@ pgbench -h localhost -U postgres -p 5432 -i -s 400 test
 postgres=# select pg_database.datname, pg_size_pretty (pg_database_size(pg_database.datname)) AS size from pg_database; 
 
 ## search
-pgbench -h localhost -U gpadmin -p 5432  -c 8 -j 8 -S -T 60 -r test
+pgbench -h localhost -U postgres -p 5432  -c 8 -j 8 -S -T 60 -r test
 
 ## update
-pgbench -h localhost -U gpadmin -p 5432 -c 8 -j 8 -S -T 60 -r test -f update.sql
+pgbench -h localhost -U postgres -p 5432 -c 8 -j 8 -S -T 60 -r test -f update.sql
 
 ## insert
-pgbench -h localhost -U gpadmin -p 5432 -c 8 -j 8 -S -T 60 -r test -f insert.sql
+pgbench -h localhost -U postgres -p 5432 -c 8 -j 8 -S -T 60 -r test -f insert.sql
 
 ## 混合读写
-pgbench -h localhost -U gpadmin -p 5432 -c 8 -j 8 -S -T 60 -r test -f test.sql
+pgbench -h localhost -U postgres -p 5432 -c 8 -j 8 -S -T 60 -r test -f test.sql
 ```

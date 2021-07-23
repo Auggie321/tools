@@ -25,3 +25,8 @@ pgbench -h localhost -U postgres -p 5432 -c 8 -j 8 -S -T 60 -r test -f insert.sq
 ## 混合读写
 pgbench -h localhost -U postgres -p 5432 -c 8 -j 8 -S -T 60 -r test -f test.sql
 ```
+
+postgres主从测试的demo
+https://arctype.com/blog/postgres-heroku/
+https://github.com/ToluClassics/Web_Registration_Form
+

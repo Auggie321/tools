@@ -1,0 +1,30 @@
+version: "2"
+services: 
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    restart: always
+    environment:
+        POSTGRES_DB: confluence
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        TZ: "Asia/Shanghai"
+    ports:
+        - 5432:5432
+    volumes:
+        - ./postgresqlDate:/var/lib/postgresql/data
+
+  confluence:
+    image: cptactionhank/atlassian-confluence:latest
+    container_name: confluence
+    restart: always
+    privileged: true
+    user: root
+    depends_on:
+      - postgres
+    ports:
+      - 8090:8090
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./confluenceConf:/var/atlassian/confluence

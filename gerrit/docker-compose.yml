@@ -1,0 +1,15 @@
+version: '3'
+services:
+  gerrit:
+    image: gerritcodereview/gerrit
+    container_name: gerrit
+    restart: always
+    volumes:
+       - ./git-volume:/var/gerrit/git
+       - ./index-volume:/var/gerrit/index
+       - ./cache-volume:/var/gerrit/cache
+    ports:
+       - "29418:29418"
+       - "8080:8080"
+    environment: 
+      - TZ=Asia/Shanghai

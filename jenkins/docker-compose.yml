@@ -3,6 +3,7 @@ services:
   jenkins:
     #image: registry.cn-shanghai.aliyuncs.com/auggie/devops:jenkins_officially_plugin
     image: jenkins/jenkins:lts
+    restart: always
     ports:
       - 8088:8080
       - 50000:50000
@@ -13,6 +14,7 @@ services:
     volumes:
       - /opt/docker/jenkins/jenkins:/var/jenkins_home
       #- /opt/docker/jenkins/jenkins/m2:/root/.m2
+      #- /opt/kube/bin/docker:/usr/bin/docker
       #- /var/run/docker.sock:/var/run/docker.sock
     extra_hosts:
       - "assets-cdn.github.com:192.30.253.112"
